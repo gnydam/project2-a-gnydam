@@ -49,24 +49,16 @@ def get_headline_dict(soup):
 def get_page_info(soup):
     title = soup.find('div', class_ = 'pane-node-title').find('h2').get_text()
     date = soup.find('div', class_ = 'pane-node-created').find('div', class_ = 'pane-content').get_text()
-    author = soup.find('div', class_ = 'byline').find('a').get_text()
+    writer = soup.find('div', class_ = 'byline').find('a').get_text()
     num_paragraph = len(soup.find('div', class_ = 'field-type-text-with-summary').find_all('p'))
-    tup = (title, date, author, num_paragraph)
+    tup = (title, date, writer, num_paragraph)
     return tup
 
 ## Extra Credit
 ## INPUT: the dictionary that was returned from part 2
 ## OUTPUT: a new dictionary with just items that contain the word U-M or Ann Arbor
 def find_mich_stuff(dicto):
-    new_d = {}
-    for key in dicto:
-        AA = re.findall(r'\bAnn Arbor', key)
-        UM = re.findall(r'\bU-M', key)
-        if AA != []:
-            new_d[key] = dicto[key]
-        elif UM != []:
-            new_d[key] = dicto[key]
-    return new_d
+    pass
 
 ########### TESTS; DO NOT CHANGE ANY CODE BELOW THIS LINE! ###########
 

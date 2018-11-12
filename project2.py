@@ -1,7 +1,7 @@
 ## SI 206 F18 - Project 2
 
 ## COMMENT HERE WITH:
-## Your name:
+## Your name: Grace Nydam
 ## Anyone you worked with on this project and how you worked together
 ## You can not share code, but can share ideas
 ###########
@@ -19,35 +19,26 @@ import ssl
 ## Grab the headlines from the "Most Read" section
 ## and return them in a list
 def grab_headlines(soup):
-    
-    # get the most read div
-    
-    # get the ordered list from that div
-    
-    # get the links from the ordered list div
-    
-    # return the headlines
-
-    pass
-
+    mostRead = soup.find_all('div', class_ = "view-most-read")
+    tags = mostRead[0].find_all('a')
+    li_of_titles = []
+    for item in tags:
+        li_of_titles.append(item.get_text())
+    return (li_of_titles)
 
 ## PART 2 Complete a function called get_headline_dict. It will take a soup object and return a dictionary
 ## with each story headline as a key and each story url as the value
 ## INPUT: soup - the soup object
 ## OUTPUT: Return - a dictionary with each story headline as the key and the story url as the value
 def get_headline_dict(soup):
-    
-    # create the empty dictionary
-    
-    # get the story wrap divs
-    
-    # get the short headline
-    
-    # find the link in headline div
-    
-    # set the dictionary key to the headline and the url as the value
-
-    pass
+    stories = soup.find_all('div', class_ = 'storywrap')
+    d = {}
+    for story in stories:
+        a_tag = story.find('div', class_ = 'views-field-field-short-headline').find('a')
+        title = a_tag.get_text()
+        url = a_tag['href']
+        d[title] = url
+    return d
 
 
 ## PART 3 Define a function called get_page_info. It will take a soup object for a story
@@ -56,24 +47,26 @@ def get_headline_dict(soup):
 ## INPUT: soup - the soup object
 ## OUTPUT: Return - a tuple with the title, author, date, and number of paragraphs
 def get_page_info(soup):
-    
-    # get the title
-    
-    # get the date
-    
-    # get the author
-    
-    # get the number of paragraphs
-    
-    # return the tuple
-
-    pass
+    title = soup.find('div', class_ = 'pane-node-title').find('h2').get_text()
+    date = soup.find('div', class_ = 'pane-node-created').find('div', class_ = 'pane-content').get_text()
+    author = soup.find('div', class_ = 'byline').find('a').get_text()
+    num_paragraph = len(soup.find('div', class_ = 'field-type-text-with-summary').find_all('p'))
+    tup = (title, date, author, num_paragraph)
+    return tup
 
 ## Extra Credit
 ## INPUT: the dictionary that was returned from part 2
 ## OUTPUT: a new dictionary with just items that contain the word U-M or Ann Arbor
-def find_mich_stuff(dict):
-    pass
+def find_mich_stuff(dicto):
+    new_d = {}
+    for key in dicto:
+        AA = re.findall(r'\bAnn Arbor', key)
+        UM = re.findall(r'\bU-M', key)
+        if AA != []:
+            new_d[key] = dicto[key]
+        elif UM != []:
+            new_d[key] = dicto[key]
+    return new_d
 
 ########### TESTS; DO NOT CHANGE ANY CODE BELOW THIS LINE! ###########
 
@@ -95,7 +88,7 @@ def getSoupObjFromFile(fileName):
     soup = BeautifulSoup(text, "html.parser")
     return soup
 
-# testing on live urls - remove the string comments to run this 
+# testing on live urls - remove the string comments to run this
 """
 soup = getSoupObjFromURL("https://www.michigandaily.com/section/news")
 print(grab_headlines(soup))
@@ -129,7 +122,7 @@ class TestP2(unittest.TestCase):
     def test_get_page_info(self):
         self.assertEqual(get_page_info(self.soup2), ('Panel discusses pros, cons of Library Lot ballot proposal', '\n    Thursday, October 25, 2018 - 9:28pm  ', 'Leah Graham', 17))
 
-    """
+
     def test_find_mich_stuff(self):
         dict = find_mich_stuff(self.dict)
         url1 = dict[' Ann Arbor state Rep. proposes bill to vastly increase renewable energy ']
@@ -137,6 +130,6 @@ class TestP2(unittest.TestCase):
         self.assertEqual(len(dict), 4)
         self.assertEqual(url1,'https://www.michigandaily.com/section/government/state-rep-proposes-bill-100-percent-renewable-energy-michigan-2050')
         self.assertEqual(url2,'https://www.michigandaily.com/section/ann-arbor/school-board-candidates-fight-name-recognition-race')
-    """
+
 
 unittest.main(verbosity=2)

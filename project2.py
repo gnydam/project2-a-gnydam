@@ -58,7 +58,15 @@ def get_page_info(soup):
 ## INPUT: the dictionary that was returned from part 2
 ## OUTPUT: a new dictionary with just items that contain the word U-M or Ann Arbor
 def find_mich_stuff(dicto):
-    pass
+    new_d = {}
+    for key in dicto:
+        AA = re.findall(r'\bAnn Arbor', key)
+        UM = re.findall(r'\bU-M', key)
+        if AA != []:
+            new_d[key] = dicto[key]
+        elif UM != []:
+            new_d[key] = dicto[key]
+    return new_d
 
 ########### TESTS; DO NOT CHANGE ANY CODE BELOW THIS LINE! ###########
 

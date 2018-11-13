@@ -67,6 +67,7 @@ def find_mich_stuff(dicto):
         elif UM != []:
             new_d[key] = dicto[key]
     return new_d
+    
 
 ########### TESTS; DO NOT CHANGE ANY CODE BELOW THIS LINE! ###########
 
